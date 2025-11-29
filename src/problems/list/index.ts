@@ -19,6 +19,9 @@ import { firstLetter } from "./firstletter";
 import { centerDiv } from "./centerdiv";
 import { card } from "./card";
 import { navbar } from "./navbar";
+import { counter } from "./counter";
+import { greeting } from "./greeting";
+import { listRender } from "./listrender";
 
 interface ProblemMap {
 	[key: string]: ProblemElement;
@@ -45,6 +48,9 @@ export const problems: ProblemMap = {
     "centerdiv": centerDiv,
     "card": card,
     "navbar": navbar,
+    "counter": counter,
+    "greeting": greeting,
+    "listrender": listRender,
 };// Derived flat list for tables and listings
 export const problemsList: Problem[] = Object.values(problems)
 	.map((p) => ({

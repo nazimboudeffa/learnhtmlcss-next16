@@ -41,9 +41,10 @@ export type ProblemElement = {
 	starterCode: string;
 	handlerFunction: ((fn: any) => boolean) | string;
 	starterFunctionName: string;
-	type?: "javascript" | "html-css"; // Type of problem
+	type?: "javascript" | "html-css" | "react"; // Type of problem
 	starterCodeHTML?: string; // For HTML/CSS problems
 	starterCodeCSS?: string; // For HTML/CSS problems
+	starterCodeReact?: string; // For React problems (JSX component code)
 	language?: string; // Programming/markup language
 };
 

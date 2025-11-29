@@ -69,7 +69,7 @@ const Home = () => {
           <div className="mt-16 sm:mt-24">
             <div className="text-center mb-12">
               <h2 className="text-2xl sm:text-3xl font-bold text-white bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                Your Learning Path
+                Your JavaScript Path
               </h2>
               <p className="mt-4 text-slate-400">Master JavaScript step by step</p>
             </div>
@@ -131,8 +131,12 @@ const Home = () => {
                   <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">Interview Prep</span>
                 </div>
               </div>
+            </div>
 
-              
+            <div className="mt-10 flex items-center justify-center">
+              <a href="/problems?language=JavaScript" className="text-center rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 px-6 py-3 text-sm font-bold text-white shadow-xl hover:shadow-indigo-500/50 transition-all hover:scale-105 active:scale-95">
+                Explore All JavaScript Challenges →
+              </a>
             </div>
           </div>
 
@@ -191,6 +195,65 @@ const Home = () => {
             <div className="mt-10 flex items-center justify-center">
               <a href="/problems?language=HTML%2FCSS" className="text-center rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 px-6 py-3 text-sm font-bold text-white shadow-xl hover:shadow-indigo-500/50 transition-all hover:scale-105 active:scale-95">
                 Explore All HTML/CSS Challenges →
+              </a>
+            </div>
+          </div>
+
+          {/* React Path Section */}
+          <div className="mt-16 sm:mt-24">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                React Path
+              </h2>
+              <p className="mt-4 text-slate-400">Build interactive components with React</p>
+            </div>
+
+            {/* Topic overview tiles */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700 shadow-lg">
+                <h3 className="text-lg font-bold text-white mb-2">Components & Props</h3>
+                <p className="text-slate-300 text-sm mb-3">
+                  Function components and prop passing.
+                  <br />
+                  Building reusable UI elements.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">props</span>
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">JSX</span>
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">composition</span>
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700 shadow-lg">
+                <h3 className="text-lg font-bold text-white mb-2">State & Events</h3>
+                <p className="text-slate-300 text-sm mb-3">
+                  useState hook for managing component state.
+                  <br />
+                  Handling user interactions and events.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">useState</span>
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">events</span>
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">forms</span>
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700 shadow-lg">
+                <h3 className="text-lg font-bold text-white mb-2">Lists & Rendering</h3>
+                <p className="text-slate-300 text-sm mb-3">
+                  Mapping arrays to components with keys.
+                  <br />
+                  Conditional rendering patterns.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">map</span>
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">keys</span>
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">conditional</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-10 flex items-center justify-center">
+              <a href="/problems?language=React" className="text-center rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 px-6 py-3 text-sm font-bold text-white shadow-xl hover:shadow-indigo-500/50 transition-all hover:scale-105 active:scale-95">
+                Explore All React Challenges →
               </a>
             </div>
           </div>
