@@ -148,7 +148,7 @@ const Problems: React.FC<ProblemsProps> = ({ difficulty, language }) => {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-slate-300 text-sm font-medium">Language:</span>
+            <span className="text-slate-300 text-sm font-medium">Langs&Techs:</span>
             <select
               value={filterLanguage}
               onChange={(e) => setFilterLanguage(e.target.value)}
@@ -192,7 +192,7 @@ const Problems: React.FC<ProblemsProps> = ({ difficulty, language }) => {
               <th scope='col' className='px-3 sm:px-6 py-3 font-medium'>Title</th>
               <th scope='col' className='px-3 sm:px-6 py-3 w-[100px] font-medium'>Difficulty</th>
               <th scope='col' className='px-3 sm:px-6 py-3 w-[100px] font-medium hidden sm:table-cell'>Category</th>
-              <th scope='col' className='px-3 sm:px-6 py-3 w-[90px] font-medium hidden md:table-cell'>Language</th>
+              <th scope='col' className='px-3 sm:px-6 py-3 w-[90px] font-medium hidden md:table-cell'>Langs&Techs</th>
               <th scope='col' className='px-3 sm:px-6 py-3 w-[90px] font-medium'>Explanation</th>
             </tr>
           </thead>

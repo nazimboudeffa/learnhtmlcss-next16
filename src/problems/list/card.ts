@@ -13,65 +13,93 @@ const starterCodeCSSCard = `.card {
 }`;
 
 const handlerCard = ({ html, css }: { html: string; css: string }) => {
+  const messages: { type: "hint" | "error"; text: string }[] = [];
+  let hasError = false;
   try {
     const doc = createTestDOM(html, css);
-    
+
     // Check if card exists
-    assertElementExists(doc, ".card");
-    
+    try {
+      assertElementExists(doc, ".card");
+      messages.push({ type: "hint", text: 'Found .card element.' });
+    } catch (e: any) {
+      messages.push({ type: "error", text: e.message });
+      hasError = true;
+    }
+
     // Check if card has an image
     const cardImg = doc.querySelector('.card img');
     if (!cardImg) {
-      throw new Error('Card should contain an image');
+      messages.push({ type: "error", text: 'Card should contain an image' });
+      hasError = true;
+    } else {
+      messages.push({ type: "hint", text: 'Card contains an image.' });
     }
-    
+
     // Check if card has a title
     const cardTitle = doc.querySelector('.card h2, .card h3, .card .card-title');
     if (!cardTitle) {
-      throw new Error('Card should contain a title (h2, h3, or .card-title)');
+      messages.push({ type: "error", text: 'Card should contain a title (h2, h3, or .card-title)' });
+      hasError = true;
+    } else {
+      messages.push({ type: "hint", text: 'Card contains a title.' });
     }
-    
+
     // Check if card has description text
     const cardText = doc.querySelector('.card p, .card .card-text');
     if (!cardText) {
-      throw new Error('Card should contain description text (p or .card-text)');
+      messages.push({ type: "error", text: 'Card should contain description text (p or .card-text)' });
+      hasError = true;
+    } else {
+      messages.push({ type: "hint", text: 'Card contains description text.' });
     }
-    
+
     // Check if card has a button
     const cardButton = doc.querySelector('.card button, .card a.button, .card .card-button');
     if (!cardButton) {
-      throw new Error('Card should contain a button or link');
+      messages.push({ type: "error", text: 'Card should contain a button or link' });
+      hasError = true;
+    } else {
+      messages.push({ type: "hint", text: 'Card contains a button or link.' });
     }
-    
+
     // Check CSS rules directly instead of computed styles
     const cssLower = css.toLowerCase().replaceAll(/\s+/g, ' ');
-    
     // Check for .card rules
     const cardRegex = /\.card\s*\{([^}]+)\}/;
     const cardMatch = cardRegex.exec(cssLower);
     if (!cardMatch) {
-      throw new Error('Card CSS rules not found');
+      messages.push({ type: "error", text: 'Card CSS rules not found' });
+      hasError = true;
+    } else {
+      const cardRules = cardMatch[1];
+      if (!cardRules.includes('border-radius')) {
+        messages.push({ type: "error", text: 'Card should have rounded corners (border-radius)' });
+        hasError = true;
+      } else {
+        messages.push({ type: "hint", text: 'Card has rounded corners.' });
+      }
+      if (!cardRules.includes('box-shadow')) {
+        messages.push({ type: "error", text: 'Card should have a shadow (box-shadow)' });
+        hasError = true;
+      } else {
+        messages.push({ type: "hint", text: 'Card has a shadow.' });
+      }
+      if (!cardRules.includes('padding')) {
+        messages.push({ type: "error", text: 'Card should have padding' });
+        hasError = true;
+      } else {
+        messages.push({ type: "hint", text: 'Card has padding.' });
+      }
     }
-    
-    const cardRules = cardMatch[1];
-    
-    if (!cardRules.includes('border-radius')) {
-      throw new Error('Card should have rounded corners (border-radius)');
-    }
-    
-    if (!cardRules.includes('box-shadow')) {
-      throw new Error('Card should have a shadow (box-shadow)');
-    }
-    
-    if (!cardRules.includes('padding')) {
-      throw new Error('Card should have padding');
-    }
-    
-    return true;
   } catch (error: any) {
-    console.log("card handler function error");
-    throw new Error(error);
+    messages.push({ type: "error", text: error.message });
+    hasError = true;
   }
+  if (!hasError) {
+    messages.push({ type: "hint", text: 'Congrats! All tests passed' });
+  }
+  return messages;
 };
 
 export const card: ProblemElement = {
