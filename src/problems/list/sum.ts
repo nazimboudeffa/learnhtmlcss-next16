@@ -7,18 +7,26 @@ const starterCodeSum = `function add(a, b){
 
 // checks if the user has the correct code
 const handlerSum = (fn: any) => {
-	// fn is the callback that user's code is passed into
+	const results: { type: 'hint' | 'error'; text: string }[] = [];
+	const a = 1;
+	const b = 2;
+	const answer = 3;
+	let passed = true;
 	try {
-		const a = 1;
-		const b = 2;
-		const answer = 3;
 		const result = fn(a, b);
 		assertDeepStrictEqual(result, answer);
-		return true;
-	} catch (error: any) {
-		console.log("Simple Sum handler function error");
-		throw new Error(error);
+	} catch {
+		passed = false;
 	}
+	if (passed) {
+		results.push(
+			{ type: 'hint', text: `✅ Passed: add(${a}, ${b}) === ${answer}` },
+			{ type: 'hint', text: 'All test cases passed! Great job.' }
+		);
+	} else {
+		results.push({ type: 'error', text: `❌ Failed: add(${a}, ${b}) — expected ${answer}` });
+	}
+	return results;
 };
 
 export const sum: ProblemElement = {
