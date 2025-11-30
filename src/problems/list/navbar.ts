@@ -12,62 +12,84 @@ const starterCodeCSSNavbar = `.navbar {
   /* Add your CSS here */
 }`;
 
+function checkNavbarExists(doc: Document, results: { type: 'hint' | 'error'; text: string }[]) {
+  try {
+    assertElementExists(doc, ".navbar");
+    results.push({ type: 'hint', text: '✅ .navbar element exists.' });
+  } catch {
+    results.push({ type: 'error', text: '❌ .navbar element is missing.' });
+  }
+}
+
+function checkLogo(doc: Document, results: { type: 'hint' | 'error'; text: string }[]) {
+  const logo = doc.querySelector('.navbar .logo, .navbar .brand, .navbar h1');
+  if (logo) {
+    results.push({ type: 'hint', text: '✅ Navbar contains a logo or brand name.' });
+  } else {
+    results.push({ type: 'error', text: '❌ Navbar should contain a logo or brand name (.logo, .brand, or h1).' });
+  }
+}
+
+function checkNavLinks(doc: Document, results: { type: 'hint' | 'error'; text: string }[]) {
+  const navLinks = doc.querySelectorAll('.navbar a, .navbar .nav-link');
+  if (navLinks.length >= 3) {
+    results.push({ type: 'hint', text: '✅ Navbar contains at least 3 navigation links.' });
+  } else {
+    results.push({ type: 'error', text: '❌ Navbar should contain at least 3 navigation links.' });
+  }
+}
+
+function checkNavbarCSS(css: string, results: { type: 'hint' | 'error'; text: string }[]) {
+  const cssLower = css.toLowerCase().replaceAll(/\s+/g, ' ');
+  const navbarRegex = /\.navbar\s*\{([^}]+)\}/;
+  const navbarMatch = navbarRegex.exec(cssLower);
+  if (!navbarMatch) {
+    results.push({ type: 'error', text: '❌ Navbar CSS rules not found.' });
+    return;
+  }
+  const navbarRules = navbarMatch[1];
+  if (navbarRules.includes('display') && navbarRules.includes('flex')) {
+    results.push({ type: 'hint', text: '✅ Navbar uses display: flex.' });
+  } else {
+    results.push({ type: 'error', text: '❌ Navbar should use display: flex.' });
+  }
+  if (navbarRules.includes('justify-content') && navbarRules.includes('space-between')) {
+    results.push({ type: 'hint', text: '✅ Navbar uses justify-content: space-between.' });
+  } else {
+    results.push({ type: 'error', text: '❌ Navbar should use justify-content: space-between.' });
+  }
+  if (navbarRules.includes('align-items') && navbarRules.includes('center')) {
+    results.push({ type: 'hint', text: '✅ Navbar uses align-items: center.' });
+  } else {
+    results.push({ type: 'error', text: '❌ Navbar should use align-items: center.' });
+  }
+  if (navbarRules.includes('padding')) {
+    results.push({ type: 'hint', text: '✅ Navbar has padding.' });
+  } else {
+    results.push({ type: 'error', text: '❌ Navbar should have padding.' });
+  }
+  if (navbarRules.includes('background-color') || navbarRules.includes('background:')) {
+    results.push({ type: 'hint', text: '✅ Navbar has a background color.' });
+  } else {
+    results.push({ type: 'error', text: '❌ Navbar should have a background color.' });
+  }
+}
+
 const handlerNavbar = ({ html, css }: { html: string; css: string }) => {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
   try {
     const doc = createTestDOM(html, css);
-    
-    // Check if navbar exists
-    assertElementExists(doc, ".navbar");
-    
-    // Check if navbar has a logo or brand name
-    const logo = doc.querySelector('.navbar .logo, .navbar .brand, .navbar h1');
-    if (!logo) {
-      throw new Error('Navbar should contain a logo or brand name (.logo, .brand, or h1)');
-    }
-    
-    // Check if navbar has navigation links
-    const navLinks = doc.querySelectorAll('.navbar a, .navbar .nav-link');
-    if (navLinks.length < 3) {
-      throw new Error('Navbar should contain at least 3 navigation links');
-    }
-    
-    // Check CSS rules directly instead of computed styles
-    const cssLower = css.toLowerCase().replaceAll(/\s+/g, ' ');
-    
-    // Check for .navbar rules
-    const navbarRegex = /\.navbar\s*\{([^}]+)\}/;
-    const navbarMatch = navbarRegex.exec(cssLower);
-    if (!navbarMatch) {
-      throw new Error('Navbar CSS rules not found');
-    }
-    
-    const navbarRules = navbarMatch[1];
-    
-    if (!navbarRules.includes('display') || !navbarRules.includes('flex')) {
-      throw new Error('Navbar should use display: flex');
-    }
-    
-    if (!navbarRules.includes('justify-content') || !navbarRules.includes('space-between')) {
-      throw new Error('Navbar should use justify-content: space-between');
-    }
-    
-    if (!navbarRules.includes('align-items') || !navbarRules.includes('center')) {
-      throw new Error('Navbar should use align-items: center');
-    }
-    
-    if (!navbarRules.includes('padding')) {
-      throw new Error('Navbar should have padding');
-    }
-    
-    if (!navbarRules.includes('background-color') && !navbarRules.includes('background:')) {
-      throw new Error('Navbar should have a background-color');
-    }
-    
-    return true;
+    checkNavbarExists(doc, results);
+    checkLogo(doc, results);
+    checkNavLinks(doc, results);
+    checkNavbarCSS(css, results);
   } catch (error: any) {
-    console.log("navbar handler function error");
-    throw new Error(error);
+    results.push({ type: 'error', text: error.message });
   }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All checks passed! Great job.' });
+  }
+  return results;
 };
 
 export const navbar: ProblemElement = {
