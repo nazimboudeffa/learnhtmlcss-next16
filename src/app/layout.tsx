@@ -5,7 +5,7 @@ import { Metadata, Viewport } from 'next'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Learn JS',
+  title: 'Learn HTML/CSS',
   description: 'Learn to code with a dude',
 }
 
