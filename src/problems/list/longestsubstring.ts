@@ -6,18 +6,27 @@ const starterCodeLongestSubstring = `function lengthOfLongestSubstring(s){
 };`;
 
 const handlerLongestSubstring = (fn: any) => {
-  try {
-    const inputs = ["abcabcbb", "bbbbb", "pwwkew", ""];
-    const outputs = [3, 1, 3, 0];
-    for (let i = 0; i < inputs.length; i++) {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  const inputs = ["abcabcbb", "bbbbb", "pwwkew", ""];
+  const outputs = [3, 1, 3, 0];
+  for (let i = 0; i < inputs.length; i++) {
+    let passed = true;
+    try {
       const result = fn(inputs[i]);
       assertDeepStrictEqual(result, outputs[i]);
+    } catch {
+      passed = false;
     }
-    return true;
-  } catch (error: any) {
-    console.log("lengthOfLongestSubstring handler function error");
-    throw new Error(error);
+    if (passed) {
+      results.push({ type: 'hint', text: `✅ Passed: lengthOfLongestSubstring('${inputs[i]}') === ${outputs[i]}` });
+    } else {
+      results.push({ type: 'error', text: `❌ Failed: lengthOfLongestSubstring('${inputs[i]}') — expected ${outputs[i]}` });
+    }
   }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All test cases passed! Great job.' });
+  }
+  return results;
 };
 
 export const longestSubstring: ProblemElement = {
