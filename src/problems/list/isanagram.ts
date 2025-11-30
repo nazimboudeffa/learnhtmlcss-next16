@@ -6,22 +6,31 @@ const starterCodeIsAnagram = `function isAnagram(s, t){
 };`;
 
 const handlerIsAnagram = (fn: any) => {
-  try {
-    const inputs = [
-      { s: "anagram", t: "nagaram" },
-      { s: "rat", t: "car" },
-      { s: "a", t: "ab" },
-    ];
-    const outputs = [true, false, false];
-    for (let i = 0; i < inputs.length; i++) {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  const inputs = [
+    { s: "anagram", t: "nagaram" },
+    { s: "rat", t: "car" },
+    { s: "a", t: "ab" },
+  ];
+  const outputs = [true, false, false];
+  for (let i = 0; i < inputs.length; i++) {
+    let passed = true;
+    try {
       const result = fn(inputs[i].s, inputs[i].t);
       assertDeepStrictEqual(result, outputs[i]);
+    } catch {
+      passed = false;
     }
-    return true;
-  } catch (error: any) {
-    console.log("isAnagram handler function error");
-    throw new Error(error);
+    if (passed) {
+      results.push({ type: 'hint', text: `✅ Passed: isAnagram('${inputs[i].s}', '${inputs[i].t}')` });
+    } else {
+      results.push({ type: 'error', text: `❌ Failed: isAnagram('${inputs[i].s}', '${inputs[i].t}')` });
+    }
   }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All test cases passed! Great job.' });
+  }
+  return results;
 };
 
 export const isAnagram: ProblemElement = {

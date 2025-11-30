@@ -18,20 +18,22 @@ const starterCodeListRender = `function ItemList(props) {
 }`;
 
 const handlerListRender = (Component: any) => {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  if (typeof Component !== 'function') {
+    results.push({ type: 'error', text: 'ItemList must be a function component.' });
+    return results;
+  }
   try {
-    if (typeof Component !== 'function') {
-      throw new TypeError('ItemList must be a function component');
-    }
-    
     const result = Component({ items: ['apple', 'banana', 'orange'] });
     if (!result || typeof result !== 'object') {
-      throw new Error('Component must return JSX');
+      results.push({ type: 'error', text: 'Component must return JSX.' });
+      return results;
     }
-    
-    return true;
+    results.push({ type: 'hint', text: 'Looks like a valid React function component!' });
+    return results;
   } catch (error: any) {
-    console.log("listrender handler function error:", error.message);
-    throw new Error(error.message);
+    results.push({ type: 'error', text: error.message });
+    return results;
   }
 };
 

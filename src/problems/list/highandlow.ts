@@ -7,25 +7,28 @@ const starterCodeHighAndLow = `function highAndLow(numbers){
   };`;
   
 // checks if the user has the correct code
-const handlerHighAndLow= (fn: any) => {
-	  // fn is the callback that user's code is passed into
-	  try {
-		  const nums = ["1 2 3 4 5","1 2 -3 4 5","1 9 3 4 -5","42"];
-		  const answers = [
-			  "5 1",
-			  "5 -3",
-			  "9 -5",
-			  "42 42"
-		  ];
-		  for (let i = 0; i < nums.length; i++) {
-			  const result = fn(nums[i]);
-			  assertDeepStrictEqual(result, answers[i]);
-		  }
-		  return true;
-	  } catch (error: any) {
-		  console.log("Fizz Buzz handler function error");
-		  throw new Error(error);
-	  }
+const handlerHighAndLow = (fn: any) => {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  const nums = ["1 2 3 4 5", "1 2 -3 4 5", "1 9 3 4 -5", "42"];
+  const answers = ["5 1", "5 -3", "9 -5", "42 42"];
+  for (let i = 0; i < nums.length; i++) {
+		let passed = true;
+		try {
+			const result = fn(nums[i]);
+			assertDeepStrictEqual(result, answers[i]);
+		} catch {
+			passed = false;
+		}
+		if (passed) {
+			results.push({ type: 'hint', text: `✅ Passed: highAndLow('${nums[i]}')` });
+		} else {
+			results.push({ type: 'error', text: `❌ Failed: highAndLow('${nums[i]}')` });
+		}
+  }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All test cases passed! Great job.' });
+  }
+  return results;
 };
 
 export const highAndLow: ProblemElement = {

@@ -7,23 +7,31 @@ const starterCodeFizzBuzz = `function fizzbuzz(n){
   
 // checks if the user has the correct code
 const handlerFizzBuzz = (fn: any) => {
-	  // fn is the callback that user's code is passed into
-	  try {
-		  const nums = [3,5,15];
-		  const answers = [
-			  [1, 2,'Fizz'],
-			  [1, 2,'Fizz',4,'Buzz'],
-			  [1, 2,'Fizz',4,'Buzz','Fizz',7,8,'Fizz','Buzz',11,'Fizz',13,14,'FizzBuzz']
-		  ];
-		  for (let i = 0; i < nums.length; i++) {
-			  const result = fn(nums[i]);
-			  assertDeepStrictEqual(result, answers[i]);
-		  }
-		  return true;
-	  } catch (error: any) {
-		  console.log("Fizz Buzz handler function error");
-		  throw new Error(error);
-	  }
+	const results: { type: 'hint' | 'error'; text: string }[] = [];
+	const nums = [3, 5, 15];
+	const answers = [
+		[1, 2, 'Fizz'],
+		[1, 2, 'Fizz', 4, 'Buzz'],
+		[1, 2, 'Fizz', 4, 'Buzz', 'Fizz', 7, 8, 'Fizz', 'Buzz', 11, 'Fizz', 13, 14, 'FizzBuzz']
+	];
+	for (let i = 0; i < nums.length; i++) {
+		let passed = true;
+		try {
+			const result = fn(nums[i]);
+			assertDeepStrictEqual(result, answers[i]);
+		} catch {
+			passed = false;
+		}
+		if (passed) {
+			results.push({ type: 'hint', text: `✅ Passed: fizzbuzz(${nums[i]})` });
+		} else {
+			results.push({ type: 'error', text: `❌ Failed: fizzbuzz(${nums[i]})` });
+		}
+	}
+	if (results.every(r => r.type === 'hint')) {
+		results.push({ type: 'hint', text: 'All test cases passed! Great job.' });
+	}
+	return results;
 };
 
 export const fizzBuzz: ProblemElement = {

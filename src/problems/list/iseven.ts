@@ -6,22 +6,31 @@ const starterCodeIsEven = `function isEven(n){
 };`;
 
 const handlerIsEven = (fn: any) => {
-  try {
-    const tests = [
-      { n: 2, expected: true },
-      { n: 3, expected: false },
-      { n: 0, expected: true },
-      { n: 17, expected: false },
-    ];
-    for (const test of tests) {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  const tests = [
+    { n: 2, expected: true },
+    { n: 3, expected: false },
+    { n: 0, expected: true },
+    { n: 17, expected: false },
+  ];
+  for (const test of tests) {
+    let passed = true;
+    try {
       const result = fn(test.n);
       assertDeepStrictEqual(result, test.expected);
+    } catch {
+      passed = false;
     }
-    return true;
-  } catch (error: any) {
-    console.log("isEven handler function error");
-    throw new Error(error);
+    if (passed) {
+      results.push({ type: 'hint', text: `✅ Passed: isEven(${test.n}) === ${test.expected}` });
+    } else {
+      results.push({ type: 'error', text: `❌ Failed: isEven(${test.n}) — expected ${test.expected}` });
+    }
   }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All test cases passed! Great job.' });
+  }
+  return results;
 };
 
 export const isEven: ProblemElement = {
