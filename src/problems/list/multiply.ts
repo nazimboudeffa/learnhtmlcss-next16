@@ -6,21 +6,30 @@ const starterCodeMultiply = `function multiply(a, b){
 };`;
 
 const handlerMultiply = (fn: any) => {
-  try {
-    const tests = [
-      { a: 2, b: 3, expected: 6 },
-      { a: 5, b: 4, expected: 20 },
-      { a: 0, b: 10, expected: 0 },
-    ];
-    for (const test of tests) {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  const tests = [
+    { a: 2, b: 3, expected: 6 },
+    { a: 5, b: 4, expected: 20 },
+    { a: 0, b: 10, expected: 0 },
+  ];
+  for (const test of tests) {
+    let passed = true;
+    try {
       const result = fn(test.a, test.b);
       assertDeepStrictEqual(result, test.expected);
+    } catch {
+      passed = false;
     }
-    return true;
-  } catch (error: any) {
-    console.log("Multiply handler function error");
-    throw new Error(error);
+    if (passed) {
+      results.push({ type: 'hint', text: `✅ Passed: multiply(${test.a}, ${test.b}) === ${test.expected}` });
+    } else {
+      results.push({ type: 'error', text: `❌ Failed: multiply(${test.a}, ${test.b}) — expected ${test.expected}` });
+    }
   }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All test cases passed! Great job.' });
+  }
+  return results;
 };
 
 export const multiply: ProblemElement = {
