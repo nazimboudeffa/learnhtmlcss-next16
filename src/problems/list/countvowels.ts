@@ -6,22 +6,26 @@ const starterCodeCountVowels = `function countVowels(s){
 };`;
 
 const handlerCountVowels = (fn: any) => {
-  try {
-    const tests = [
-      { s: "hello", expected: 2 },
-      { s: "aeiou", expected: 5 },
-      { s: "xyz", expected: 0 },
-      { s: "JavaScript", expected: 3 },
-    ];
-    for (const test of tests) {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  const tests = [
+    { s: "hello", expected: 2 },
+    { s: "aeiou", expected: 5 },
+    { s: "xyz", expected: 0 },
+    { s: "JavaScript", expected: 3 },
+  ];
+  for (const test of tests) {
+    try {
       const result = fn(test.s);
       assertDeepStrictEqual(result, test.expected);
+      results.push({ type: 'hint', text: `✅ Passed: countVowels('${test.s}') === ${test.expected}` });
+    } catch (error: any) {
+      results.push({ type: 'error', text: `❌ Failed: countVowels('${test.s}') — expected ${test.expected}, got ${error?.actual ?? 'error'}` });
     }
-    return true;
-  } catch (error: any) {
-    console.log("countVowels handler function error");
-    throw new Error(error);
   }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All test cases passed! Great job.' });
+  }
+  return results;
 };
 
 export const countVowels: ProblemElement = {
