@@ -13,21 +13,33 @@ const starterCodeGreeting = `function Greeting(props) {
 }`;
 
 const handlerGreeting = (Component: any) => {
-  try {
-    if (typeof Component !== 'function') {
-      throw new TypeError('Greeting must be a function component');
-    }
-    
-    const result = Component({});
-    if (!result || typeof result !== 'object') {
-      throw new Error('Component must return JSX');
-    }
-    
-    return true;
-  } catch (error: any) {
-    console.log("greeting handler function error:", error.message);
-    throw new Error(error.message);
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  if (typeof Component !== 'function') {
+    results.push({ type: 'error', text: 'Greeting must be a function component.' });
+    return results;
   }
+  try {
+    // Test with name prop
+    const resultWithName = Component({ name: 'Alice' });
+    if (!resultWithName || typeof resultWithName !== 'object') {
+      results.push({ type: 'error', text: 'Component must return JSX.' });
+    } else {
+      results.push({ type: 'hint', text: '✅ Passed: returns JSX with name prop.' });
+    }
+    // Test with no name prop
+    const resultNoName = Component({});
+    if (!resultNoName || typeof resultNoName !== 'object') {
+      results.push({ type: 'error', text: 'Component must return JSX when no name is provided.' });
+    } else {
+      results.push({ type: 'hint', text: '✅ Passed: returns JSX with no name prop.' });
+    }
+  } catch (error: any) {
+    results.push({ type: 'error', text: error.message });
+  }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All checks passed! Great job.' });
+  }
+  return results;
 };
 
 export const greeting: ProblemElement = {
