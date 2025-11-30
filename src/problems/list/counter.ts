@@ -15,23 +15,26 @@ const starterCodeCounter = `function Counter() {
 }`;
 
 const handlerCounter = (Component: any) => {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  // For now, basic validation that component is a function
+  if (typeof Component !== 'function') {
+    results.push({ type: 'error', text: 'Counter must be a function component.' });
+    return results;
+  }
+  // Check if component returns JSX (basic validation)
   try {
-    // For now, basic validation that component is a function
-    if (typeof Component !== 'function') {
-      throw new TypeError('Counter must be a function component');
-    }
-    
-    // Check if component returns JSX (basic validation)
     const result = Component({});
     if (!result || typeof result !== 'object') {
-      throw new Error('Component must return JSX');
+      results.push({ type: 'error', text: 'Component must return JSX.' });
+      return results;
     }
-    
-    // Additional checks can be added when React playground is ready
-    return true;
+    // If passed all checks, provide a hint
+    results.push({ type: 'hint', text: 'Looks like a valid React function component!' });
+    // Additional checks can be added here
+    return results;
   } catch (error: any) {
-    console.log("counter handler function error:", error.message);
-    throw new Error(error.message);
+    results.push({ type: 'error', text: error.message });
+    return results;
   }
 };
 
