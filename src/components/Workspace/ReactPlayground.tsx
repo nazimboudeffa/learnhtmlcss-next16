@@ -33,6 +33,8 @@ const PlaygroundReact: React.FC<PlaygroundReactProps> = ({ problem, setSuccess, 
   });
   const [runMessages, setRunMessages] = useState<{ type: "hint" | "error"; text: string }[]>([]);
   const [runKey, setRunKey] = useState(0);
+  // Track submit state for confetti
+  const [submitMessages, setSubmitMessages] = useState<{ type: "hint" | "error"; text: string }[]>([]);
   // Listen for messages from ReactPreview iframe
   useEffect(() => {
     function handleMessage(event: MessageEvent) {
@@ -82,6 +84,40 @@ const PlaygroundReact: React.FC<PlaygroundReactProps> = ({ problem, setSuccess, 
     // Fallback: original preview run for non-react problems
     setRunMessages([]);
     setRunKey(k => k + 1);
+  };
+
+  // Handle submit: show confetti if all tests pass
+  const handleSubmit = async () => {
+    if (problem.type === 'react' && typeof problem.handlerFunction === 'function') {
+      let results: { type: 'hint' | 'error'; text: string }[] = [];
+      try {
+        results = problem.handlerFunction(userCode);
+      } catch (e) {
+        results = [{ type: 'error', text: 'Handler error: ' + (e as Error).message }];
+      }
+      setSubmitMessages(results);
+      setRunMessages(results);
+      if (results.some(r => r.type === 'error')) {
+        toast.error('There is an error, check the console.', {
+          position: 'top-center',
+          autoClose: 3000,
+          theme: 'dark',
+        });
+        setSuccess && setSuccess(false);
+      } else {
+        toast.success('🎉 Congratulations! All tests passed.', {
+          position: 'top-center',
+          autoClose: 3000,
+          theme: 'dark',
+        });
+        setSuccess && setSuccess(true);
+      }
+      return;
+    }
+    // Fallback: original preview run for non-react problems
+    setRunMessages([]);
+    setRunKey(k => k + 1);
+    setSuccess && setSuccess(false);
   };
 
   const handleReset = () => {
@@ -213,7 +249,7 @@ const PlaygroundReact: React.FC<PlaygroundReactProps> = ({ problem, setSuccess, 
           </div>
         </Split>
       </div>
-      <EditorFooter handleRun={handleRun} handleSubmit={handleRun} handleReset={handleReset} messages={runMessages} />
+      <EditorFooter handleRun={handleRun} handleSubmit={handleSubmit} handleReset={handleReset} messages={runMessages} />
     </div>
   );
 };
